@@ -32,7 +32,7 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
 
   db.user = User;
   db.inventory = Inventory;
-  db.userInventory = UserInventory;
+  // db.userInventory = UserInventory;
 
 
   

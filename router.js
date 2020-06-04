@@ -101,9 +101,7 @@ router.post("/purchaseInventory", async (request, response) => {
 
         console.log(inventoryItemExists[0].toJSON())
 
-        userExists[0].addInventory(inventoryItemExists)
-
-
+        userExists[0].addInventory(inventoryItemExists[0], { through: { inventoryQuantity: quantity } })
 
         response.json({
             "message": "All OK",
