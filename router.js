@@ -47,13 +47,6 @@ router.post('/users', async (request, response) => {
             email,
             fullName
         })
-    
-        if(res) {
-            // create a new User Inventory for him
-
-        }
-
-
         response.json(res)
     } catch (error) {
         response.json({})
@@ -111,11 +104,29 @@ router.post("/purchaseInventory", async (request, response) => {
             user: userExists[0].toJSON(),
             inventory: inventoryItemExists[0].toJSON(),
         })
-
-
-
-
         
+    } catch (error) {
+        response.send({
+            "message": `Something went wrong! ${error.message}`
+        })
+    }
+})
+
+
+router.get('/getUserInventory/:email', async (request, response) => {
+    const { email } = request.params;
+
+    try {
+        const res = await user.findOne({
+            where: { email },
+            include: inventory
+        })
+
+        response.json({
+            "message": "All OK",
+            data: res.toJSON()
+        })
+
     } catch (error) {
         response.send({
             "message": `Something went wrong! ${error.message}`
