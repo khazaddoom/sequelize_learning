@@ -20,6 +20,20 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   db.Sequelize = Sequelize;
   db.sequelize = sequelize;
   
-  db.blogs = require("../modules/blog")(sequelize, Sequelize);
+  db.blogs = require('../modules/blog')(sequelize, Sequelize);
+
+  const User =  require('../modules/users')(sequelize, Sequelize);
+  const Inventory = require('../modules/inventory')(sequelize, Sequelize);
+  const UserInventory = require('../modules/user_inventory')(sequelize, Sequelize);
+
+  User.belongsToMany(Inventory, { through: UserInventory })
+  Inventory.belongsToMany(User, { through: UserInventory })
+
+
+  db.user = User;
+  db.inventory = Inventory;
+  db.userInventory = UserInventory;
+
+
   
   module.exports = db;
