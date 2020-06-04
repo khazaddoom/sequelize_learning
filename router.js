@@ -101,6 +101,9 @@ router.post("/purchaseInventory", async (request, response) => {
 
         console.log(inventoryItemExists[0].toJSON())
 
+        // here i am adding a INVENTORY ITEM and a Quantity to a User
+        // so the join table will hold the quanity of the inventory item(Coins, Life, 2 types of Boosters) per user
+        // since sequelize join table retains the uniqueness of the row, it kind of makes us a favour
         userExists[0].addInventory(inventoryItemExists[0], { through: { inventoryQuantity: quantity } })
 
         response.json({
