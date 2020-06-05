@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 const db = require('./src/database')
-const { blogs, user, inventory } = db;
+const { blogs, user, inventory, loginRewards } = db;
 
 router.get('/blog', (request, response) => {
 
@@ -12,7 +12,7 @@ router.get('/blog', (request, response) => {
                 "message": "All OK",
                 data: [...blogs]
             })
-        })    
+        })
 })
 
 
@@ -35,7 +35,7 @@ router.post('/blog', (request, response) => {
             })
         })
 
-    
+
 })
 
 router.post('/users', async (request, response) => {
@@ -67,7 +67,7 @@ router.post('/inventory', async (request, response) => {
         })
     } catch (error) {
         response.send({
-                "message": `Something went wrong! ${error.message}`
+            "message": `Something went wrong! ${error.message}`
         })
     }
 })
@@ -76,7 +76,7 @@ router.post('/inventory', async (request, response) => {
 router.post("/purchaseInventory", async (request, response) => {
     try {
 
-        const { email, itemName, quantity} = request.body;
+        const { email, itemName, quantity } = request.body;
 
         const userExists = await user.findAll({
             where: {
@@ -104,7 +104,7 @@ router.post("/purchaseInventory", async (request, response) => {
             user: userExists[0].toJSON(),
             inventory: inventoryItemExists[0].toJSON(),
         })
-        
+
     } catch (error) {
         response.send({
             "message": `Something went wrong! ${error.message}`
@@ -133,5 +133,34 @@ router.get('/getUserInventory/:email', async (request, response) => {
         })
     }
 })
+
+
+router.post('/login-reward', async (request, response) => {
+    try {
+
+        const { dayCount, title, initialQuantity } = request.body;
+
+        const inventoryItem = await inventory.findOne({
+            where: { title }
+        })
+
+        const newRow = await loginRewards.create({
+            dayCount,
+            initialQuantity
+        })
+
+        newRow.addInventory(inventoryItem);
+
+        response.json({
+            data: inventoryItem.toJSON()
+        })
+
+    } catch (error) {
+        response.send({
+            "message": `Something went wrong! ${error.message}`
+        })
+    }
+})
+
 
 module.exports = router;
