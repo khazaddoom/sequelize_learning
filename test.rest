@@ -20,3 +20,27 @@ content-type: application/json
 ###
 
 GET http://localhost:3000/daily-login-source HTTP/1.1
+
+
+###
+
+POST http://localhost:3000/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "ganesh.a@juegostudio.com"
+}
+
+
+### 
+POST http://localhost:3000/users HTTP/1.1
+content-type: application/json
+
+{
+    "email": "saurav.kumar@juegostudio.com",
+    "fullName": "Saurav Kumar"
+}
+
+### 
+
+GET http://localhost:3000/users/ganesh.a@juegostudio.com HTTP/1.1

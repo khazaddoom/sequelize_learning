@@ -38,8 +38,17 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   Inventory.hasMany(DailyLoginSource);
   DailyLoginSource.belongsTo(Inventory)
 
+
+  const UserDailyLoginReward = require('../modules/user_dailylogin_reward')(sequelize, Sequelize);
+
+  User.belongsToMany(DailyLoginSource, { through: UserDailyLoginReward});
+  DailyLoginSource.belongsToMany(User, { through: UserDailyLoginReward});
+
+  
+
   db.user = User;
   db.inventory = Inventory;
   db.dailyLoginSource = DailyLoginSource;
+  db.userDailyLoginReward = UserDailyLoginReward;
  
   module.exports = db;

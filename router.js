@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 const db = require('./src/database')
-const { blogs, user, inventory, dailyLoginSource } = db;
+const { blogs, user, inventory, dailyLoginSource, userDailyLoginReward } = db;
 
 router.get('/blog', (request, response) => {
 
@@ -49,10 +49,37 @@ router.post('/users', async (request, response) => {
         })
         response.json(res)
     } catch (error) {
-        response.json({})
+        response.send({
+            "message": `Something went wrong! ${error.message}`
+        })
     }
 
 })
+
+router.get('/users/:email', async (request, response) => {
+
+    try {
+
+        const { email } = request.params;
+
+        const res = await user.findOne({
+            where: {
+                email
+            },
+            include: dailyLoginSource
+        })
+
+        response.json(res)
+        
+    } catch (error) {
+        response.send({
+            "message": `Something went wrong! ${error.message}`
+        })
+    }
+
+})
+
+
 router.post('/inventory', async (request, response) => {
 
     const { title } = request.body;
@@ -181,6 +208,30 @@ router.get('/daily-login-source', async (request, response) => {
         });
     }
 
+});
+
+router.post('/login', async (request, response) => {
+
+    try {
+        const {email } = request.body;
+    
+        const existingUser = await user.findOne({ email });
+        
+        const rewards = await dailyLoginSource.findAll({});
+
+        rewards.forEach(async (reward) => {
+            await existingUser.addDailyLoginSource(reward, { through: { rewardQuantity: reward.initialQuantity, loginDate: new Date() } })
+        });
+
+        response.json({
+            data: existingUser.toJSON()
+        }); 
+
+    } catch (error) {
+        response.send({
+            "message": `Something went wrong! ${error.message}`
+        });
+    }
 });
 
 module.exports = router;
