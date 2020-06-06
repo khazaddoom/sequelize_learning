@@ -25,22 +25,21 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   const User =  require('../modules/users')(sequelize, Sequelize);
   const Inventory = require('../modules/inventory')(sequelize, Sequelize);
   const UserInventory = require('../modules/user_inventory')(sequelize, Sequelize);
-  const LoginRewards = require('../modules/login-reward')(sequelize, Sequelize);
-  const DailyLoginRewards = require('../modules/daily-login-rewards')(sequelize, Sequelize);
-
+  // const LoginRewards = require('../modules/login-reward')(sequelize, Sequelize);
 
   User.belongsToMany(Inventory, { through: UserInventory })
   Inventory.belongsToMany(User, { through: UserInventory })
 
-  LoginRewards.belongsToMany(Inventory, { through: 'LoginInventory'});
-  Inventory.belongsToMany(LoginRewards, { through: 'LoginInventory'});
+  const DailyLoginSource = require('../modules/daily-login-source')(sequelize, Sequelize);
 
-  User.belongsToMany(LoginRewards, { through: DailyLoginRewards});
-  LoginRewards.belongsToMany(User, { through: DailyLoginRewards});
+  // User.belongsToMany(LoginRewards, { through: DailyLoginRewards});
+  // LoginRewards.belongsToMany(User, { through: DailyLoginRewards});
+
+  Inventory.hasMany(DailyLoginSource);
+  DailyLoginSource.belongsTo(Inventory)
 
   db.user = User;
   db.inventory = Inventory;
-  // db.userInventory = UserInventory;
-  db.loginRewards = LoginRewards;
-  
+  db.dailyLoginSource = DailyLoginSource;
+ 
   module.exports = db;

@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 const db = require('./src/database')
-const { blogs, user, inventory, loginRewards } = db;
+const { blogs, user, inventory, dailyLoginSource } = db;
 
 router.get('/blog', (request, response) => {
 
@@ -134,25 +134,28 @@ router.get('/getUserInventory/:email', async (request, response) => {
     }
 })
 
+router.post('/daily-login-source', async (request, response) => {
 
-router.post('/login-reward', async (request, response) => {
     try {
 
-        const { dayCount, title, initialQuantity } = request.body;
+        const { dayCount, initialQuantity, inventoryId } = request.body
+        console.log(request.body)
 
-        const inventoryItem = await inventory.findOne({
-            where: { title }
-        })
-
-        const newRow = await loginRewards.create({
+        const new_dls = await dailyLoginSource.create({
             dayCount,
             initialQuantity
+        }); 
+        
+        const inv = await inventory.findOne({
+            where: {
+                "_ID": inventoryId
+            }
         })
-
-        newRow.addInventory(inventoryItem);
+        
+        new_dls.setInventory(inv);
 
         response.json({
-            data: inventoryItem.toJSON()
+            data: new_dls.toJSON()
         })
 
     } catch (error) {
@@ -162,5 +165,22 @@ router.post('/login-reward', async (request, response) => {
     }
 })
 
+
+router.get('/daily-login-source', async (request, response) => {
+
+    try {
+        const res = await dailyLoginSource.findAll({
+            include: inventory
+        });
+        response.json({
+            data: res
+        });
+    } catch (error) {
+        response.send({
+            "message": `Something went wrong! ${error.message}`
+        });
+    }
+
+});
 
 module.exports = router;

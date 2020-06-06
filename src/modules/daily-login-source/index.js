@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const LoginRewards = sequelize.define("LoginRewards", {
+    const DailyLoginSource = sequelize.define("DailyLoginSource", {
         "dayCount": {
             type: Sequelize.INTEGER
         },
@@ -8,5 +8,5 @@ module.exports = (sequelize, Sequelize) => {
         }
     });
 
-    return LoginRewards;
+    return DailyLoginSource;
 };

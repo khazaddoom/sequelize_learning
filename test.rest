@@ -1,0 +1,22 @@
+POST http://localhost:3000/daily-login-source HTTP/1.1
+content-type: application/json
+
+{
+    "dayCount": 3,
+    "initialQuantity": 300,
+    "inventoryId": 1
+}
+
+###
+
+POST http://localhost:3000/inventory HTTP/1.1
+content-type: application/json
+
+{
+    "title": "SkipQuestion Booster"
+}
+
+
+###
+
+GET http://localhost:3000/daily-login-source HTTP/1.1
