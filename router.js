@@ -66,7 +66,11 @@ router.get('/users/:email', async (request, response) => {
             where: {
                 email
             },
-            include: dailyLoginSource
+            include: [{
+                model: dailyLoginSource,
+                through: {attributes: []},
+                include: [inventory]
+            }]
         })
 
         response.json(res)
@@ -219,8 +223,10 @@ router.post('/login', async (request, response) => {
         
         const rewards = await dailyLoginSource.findAll({});
 
+        let today = new Date();
+
         rewards.forEach(async (reward) => {
-            await existingUser.addDailyLoginSource(reward, { through: { rewardQuantity: reward.initialQuantity, loginDate: new Date() } })
+            await existingUser.addDailyLoginSource(reward, { through: { rewardQuantity: reward.initialQuantity, loginDate: today++ } })
         });
 
         response.json({

@@ -5,7 +5,12 @@ module.exports = (sequelize, Sequelize) => {
         },
         rewardQuantity: {
             type: Sequelize.INTEGER
-        }
+        },
+        // claimed: {
+        //     type: Sequelize.ENUM,
+        //     values: ['OPEN', 'CLAIMED'],
+        //     defaultValue: 'OPEN'
+        // }
     });
 
     return UserDailyLoginReward;
