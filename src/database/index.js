@@ -44,11 +44,19 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   User.belongsToMany(DailyLoginSource, { through: UserDailyLoginReward});
   DailyLoginSource.belongsToMany(User, { through: UserDailyLoginReward});
 
-  
+  const Question = require('../modules/question')(sequelize, Sequelize);
+  const Answer = require('../modules/answer')(sequelize, Sequelize);
+
+  Question.belongsTo(Answer, { as: 'possible_answers'});
+  Answer.hasMany(Question)
+
+  Answer.hasOne(Question, {constraints: false})
 
   db.user = User;
   db.inventory = Inventory;
   db.dailyLoginSource = DailyLoginSource;
   db.userDailyLoginReward = UserDailyLoginReward;
+  db.question = Question;
+  db.answer = Answer;
  
   module.exports = db;

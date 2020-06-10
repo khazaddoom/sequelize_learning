@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 const db = require('./src/database')
-const { blogs, user, inventory, dailyLoginSource, userDailyLoginReward } = db;
+const { blogs, user, inventory, dailyLoginSource, userDailyLoginReward, question, answer } = db;
 
 router.get('/blog', (request, response) => {
 
@@ -239,5 +239,37 @@ router.post('/login', async (request, response) => {
         });
     }
 });
+
+
+router.post('/question', async (request, response) => {
+
+    try {
+        const {data} = request.body
+
+        console.log(data)
+
+        const res = await question.create({
+            ...data
+        },)
+
+        response.json({
+            data: res.toJSON()
+        }); 
+
+    } catch (error) {
+        console.log(error)
+        response.send({
+            "message": `Something went wrong! ${error.message}`
+        });
+    }
+});
+
+// {
+//     include: [{
+//         association: answer,
+//         as: 'possible_answers'
+//     }]
+// }
+
 
 module.exports = router;
