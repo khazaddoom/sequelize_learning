@@ -52,5 +52,10 @@ content-type: application/json
 
 {
     "description": "Who won 2019 Cricket World Cup?",
-    "difficulty": "LOW"
+    "difficulty": "LOW",
+    "answers": [{
+        "description": "India"
+    },{
+        "description": "South Africa"
+    }]
 }

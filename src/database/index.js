@@ -47,10 +47,13 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   const Question = require('../modules/question')(sequelize, Sequelize);
   const Answer = require('../modules/answer')(sequelize, Sequelize);
 
-  Question.belongsTo(Answer, { as: 'possible_answers'});
-  Answer.hasMany(Question)
+  // for having Question has Many Answers relationship: the formerly _possibleAnswers table
+  Question.hasMany(Answer)
+  Answer.belongsTo(Question) 
 
-  Answer.hasOne(Question, {constraints: false})
+  // for having 1 correct answer per question. _correctAnswer relationship
+  // now below will make sure the foreign key of the answer table is in the QUestion table as CorrectAnswerID
+  Question.belongsTo(Answer, {as: 'CorrectAnswer', constraints: false})
 
   db.user = User;
   db.inventory = Inventory;

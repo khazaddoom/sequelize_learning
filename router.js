@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 const db = require('./src/database')
-const { blogs, user, inventory, dailyLoginSource, userDailyLoginReward, question, answer } = db;
+const { blogs, user, inventory, dailyLoginSource, userDailyLoginReward, question, answer, possible_answers } = db;
 
 router.get('/blog', (request, response) => {
 
@@ -244,16 +244,30 @@ router.post('/login', async (request, response) => {
 router.post('/question', async (request, response) => {
 
     try {
-        const {data} = request.body
+        const { description, difficulty, answers } = request.body // perhaps tags can be added here too
 
-        console.log(data)
+        const questionObj = await question.create({
+            description, difficulty,
+            answers: [...answers]
+        }, {
+            include: answer
+        })
 
-        const res = await question.create({
-            ...data
-        },)
+        // const ans1 = await answer.create({
+        //     ...answers[0]
+        // })
+
+        // const ans2 = await answer.create({
+        //     ...answers[1]
+        // })
+
+        // const res = questionObj.addAnswers([ans1, ans2])
+        // const res2 = questionObj.setCorrectAnswerId(ans1)
+
+        
 
         response.json({
-            data: res.toJSON()
+            data: questionObj.toJSON()
         }); 
 
     } catch (error) {
