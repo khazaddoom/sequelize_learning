@@ -55,6 +55,7 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   // now below will make sure the foreign key of the answer table is in the QUestion table as CorrectAnswerID
   Question.belongsTo(Answer, {as: 'CorrectAnswer', constraints: false})
 
+
   db.user = User;
   db.inventory = Inventory;
   db.dailyLoginSource = DailyLoginSource;
