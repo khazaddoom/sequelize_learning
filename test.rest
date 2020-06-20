@@ -44,3 +44,23 @@ content-type: application/json
 ### 
 
 GET http://localhost:3000/users/ganesh.a@juegostudio.com HTTP/1.1
+
+###
+
+POST http://localhost:3000/question HTTP/1.1
+content-type: application/json
+
+{
+    "description": "Who has the most ODI centuries?",
+    "difficulty": "LOW",
+    "answers": [{
+        "description": "Sachin Tendulkar"
+    },{
+        "description": "Ricky Ponting"
+    }, {
+        "description": "Virat Kohli"
+    }, {
+        "description": "AB deVilliers"
+    }
+    ]
+}
