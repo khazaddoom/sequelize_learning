@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 const db = require('./src/database')
-const { blogs, user, inventory, dailyLoginSource, userDailyLoginReward } = db;
+const { blogs, user, inventory, dailyLoginSource, userDailyLoginReward, Question, Answer } = db;
 
 router.get('/blog', (request, response) => {
 
@@ -239,5 +239,43 @@ router.post('/login', async (request, response) => {
         });
     }
 });
+
+
+router.get('/questions', async (request, response) => {
+    try {
+        const res = await Question.findAll({
+            include: Answer
+        })
+    
+        response.json(res)
+    } catch (error) {
+        response.send({
+            "message": `Something went wrong! ${error.message}`
+        });
+    }
+
+})
+
+router.post('/questions', async (request, response) => {
+   try {
+        const data = request.body;
+
+        const res = await Question.create({
+            ...data
+        }, {
+            include: [ {
+                association: Answer,
+                as: "correctAnswer"
+            } ]
+        })
+    response.json(res)
+   } catch (error) {
+        response.send({
+            "message": `Something went wrong! ${error.message}`
+        });
+   }
+
+})
+
 
 module.exports = router;

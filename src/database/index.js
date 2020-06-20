@@ -19,6 +19,19 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   
   db.Sequelize = Sequelize;
   db.sequelize = sequelize;
+
+  const Question = require('../modules/question')(sequelize, Sequelize);
+  const Answer = require('../modules/answer')(sequelize, Sequelize);
+
+  db.Question = Question;
+  db.Answer = Answer;
+
+  Object.keys(db).forEach(function(modelName) {
+    if (db[modelName].hasOwnProperty('associate')) {
+      db[modelName].associate(db)
+    }
+  })
+
   
   db.blogs = require('../modules/blog')(sequelize, Sequelize);
 
@@ -44,11 +57,14 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   User.belongsToMany(DailyLoginSource, { through: UserDailyLoginReward});
   DailyLoginSource.belongsToMany(User, { through: UserDailyLoginReward});
 
+
+  
   
 
-  db.user = User;
-  db.inventory = Inventory;
-  db.dailyLoginSource = DailyLoginSource;
-  db.userDailyLoginReward = UserDailyLoginReward;
+  db.User = User;
+  db.Inventory = Inventory;
+  db.DailyLoginSource = DailyLoginSource;
+  db.UserDailyLoginReward = UserDailyLoginReward;
+  
  
   module.exports = db;
